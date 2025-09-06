@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title if title else "Sistema de Seguridad Facial" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2.0">
+  <script src="{{ url_for('static', filename='js/app.js') }}?v=2.0"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <nav class="navbar">
+        <div class="nav-brand">
+        </div>
+        <ul class="nav-menu">
+          {% if session.get('empresa_id') %}
+            <li><a href="{{ url_for('index') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('people_bp.people_page') }}"><i class="fas fa-users"></i> Personas</a></li>
+            <li><a href="{{ url_for('events_bp.events_page') }}"><i class="fas fa-history"></i> Eventos</a></li>
+            <li><a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> Misión & Visión</a></li>
+            <li><a href="{{ url_for('instructions') }}"><i class="fas fa-book"></i> Instrucciones</a></li>
+            <li><a href="{{ url_for('profile') }}"><i class="fas fa-user"></i> Perfil</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Salir ({{ session.get('empresa_nombre') }})</a></li>
+          {% else %}
+            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+            <li><a href="{{ url_for('auth.register') }}">Registro</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash">
+            {% for m in messages %}
+              <p><i class="fas fa-info-circle"></i> {{ m }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+      <p><i class="fas fa-copyright"></i> Sistema de Detección de Rostros con IA © 2025 - Desarrollado para seguridad empresarial</p>
+    </footer>
+  </div>
+
+  <script>
+    // Forzar recarga de CSS si hay problemas de cache
+    if (performance.navigation.type === 1) {
+      const links = document.querySelectorAll('link[rel="stylesheet"]');
+      links.forEach(link => {
+        const href = link.href;
+        link.href = href + (href.includes('?') ? '&' : '?') + 'reload=' + Date.now();
+      });
+    }
+  </script>
+</body>
+</html>

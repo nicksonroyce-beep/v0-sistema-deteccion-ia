@@ -1,0 +1,247 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="instructions-container">
+  <div class="instructions-header">
+    <h2><i class="fas fa-book"></i> Manual de Instrucciones</h2>
+    <p class="subtitle">Guía completa para usar el sistema de detección facial</p>
+  </div>
+
+  <div class="instructions-content">
+    <div class="card getting-started">
+      <div class="card-header">
+        <h3><i class="fas fa-play-circle"></i> Primeros Pasos</h3>
+      </div>
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Registro de Empresa</h4>
+            <p>Crea una cuenta para tu empresa con información básica y configuración inicial.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Configurar Cámaras</h4>
+            <p>Conecta y configura las cámaras que utilizarás para el monitoreo.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Registrar Personas</h4>
+            <p>Sube fotos de las personas autorizadas para entrenar el sistema de reconocimiento.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Iniciar Monitoreo</h4>
+            <p>Activa las cámaras y comienza el monitoreo en tiempo real.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card dashboard-guide">
+      <div class="card-header">
+        <h3><i class="fas fa-tachometer-alt"></i> Uso del Dashboard</h3>
+      </div>
+      <div class="guide-content">
+        <div class="feature">
+          <div class="feature-icon">
+            <i class="fas fa-video"></i>
+          </div>
+          <div class="feature-info">
+            <h4>Centro de Monitoreo</h4>
+            <p>Visualiza múltiples cámaras simultáneamente. Usa los botones "Iniciar" y "Detener" para controlar cada cámara.</p>
+            <ul>
+              <li>Cámara Principal: Entrada principal del edificio</li>
+              <li>Cámara Entrada: Acceso secundario</li>
+              <li>Cámara Salida: Monitoreo de salidas</li>
+              <li>Cámara Parking: Área de estacionamiento</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <div class="feature-info">
+            <h4>Estadísticas en Tiempo Real</h4>
+            <p>Monitorea el rendimiento del sistema con métricas actualizadas automáticamente.</p>
+            <ul>
+              <li><strong>Personas Conocidas:</strong> Empleados y visitantes autorizados detectados</li>
+              <li><strong>Personas Desconocidas:</strong> Individuos no registrados en el sistema</li>
+              <li><strong>Total Detecciones:</strong> Número total de detecciones del día</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="feature-info">
+            <h4>Sistema de Alertas</h4>
+            <p>Recibe notificaciones automáticas cuando se detecten personas desconocidas.</p>
+            <ul>
+              <li>Alertas en tiempo real en el dashboard</li>
+              <li>Notificaciones por email automáticas</li>
+              <li>Registro completo en el historial de eventos</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card people-management">
+      <div class="card-header">
+        <h3><i class="fas fa-users"></i> Gestión de Personas</h3>
+      </div>
+      <div class="management-content">
+        <div class="instruction-block">
+          <h4><i class="fas fa-user-plus"></i> Agregar Nuevas Personas</h4>
+          <ol>
+            <li>Ve a la sección "Personas" en el menú principal</li>
+            <li>Haz clic en "Agregar Nueva Persona"</li>
+            <li>Completa el formulario con nombre y información básica</li>
+            <li>Sube una foto clara del rostro (recomendaciones abajo)</li>
+            <li>Guarda los cambios</li>
+          </ol>
+        </div>
+
+        <div class="instruction-block">
+          <h4><i class="fas fa-camera"></i> Recomendaciones para Fotos</h4>
+          <div class="photo-tips">
+            <div class="tip">
+              <i class="fas fa-check-circle text-success"></i>
+              <span>Foto frontal, bien iluminada</span>
+            </div>
+            <div class="tip">
+              <i class="fas fa-check-circle text-success"></i>
+              <span>Rostro claramente visible</span>
+            </div>
+            <div class="tip">
+              <i class="fas fa-check-circle text-success"></i>
+              <span>Sin gafas de sol o sombreros</span>
+            </div>
+            <div class="tip">
+              <i class="fas fa-check-circle text-success"></i>
+              <span>Formato JPG o PNG</span>
+            </div>
+            <div class="tip">
+              <i class="fas fa-times-circle text-danger"></i>
+              <span>Evitar fotos borrosas</span>
+            </div>
+            <div class="tip">
+              <i class="fas fa-times-circle text-danger"></i>
+              <span>No usar fotos de grupo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card events-guide">
+      <div class="card-header">
+        <h3><i class="fas fa-history"></i> Historial de Eventos</h3>
+      </div>
+      <div class="events-content">
+        <p>El sistema registra automáticamente todas las detecciones faciales:</p>
+        <div class="event-types">
+          <div class="event-type">
+            <div class="event-icon success">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="event-info">
+              <h4>Persona Conocida</h4>
+              <p>Se detectó una persona registrada en el sistema</p>
+            </div>
+          </div>
+          <div class="event-type">
+            <div class="event-icon danger">
+              <i class="fas fa-user-times"></i>
+            </div>
+            <div class="event-info">
+              <h4>Persona Desconocida</h4>
+              <p>Se detectó una persona no registrada (genera alerta)</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="event-details">
+          <h4>Información de cada evento:</h4>
+          <ul>
+            <li><strong>Timestamp:</strong> Fecha y hora exacta de la detección</li>
+            <li><strong>Cámara:</strong> Ubicación donde se realizó la detección</li>
+            <li><strong>Persona:</strong> Nombre (si es conocida) o "Desconocido"</li>
+            <li><strong>Snapshot:</strong> Imagen capturada en el momento de la detección</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card troubleshooting">
+      <div class="card-header">
+        <h3><i class="fas fa-tools"></i> Solución de Problemas</h3>
+      </div>
+      <div class="troubleshooting-content">
+        <div class="problem">
+          <h4><i class="fas fa-question-circle"></i> La cámara no se conecta</h4>
+          <ul>
+            <li>Verifica que la cámara esté conectada correctamente</li>
+            <li>Asegúrate de que no esté siendo usada por otra aplicación</li>
+            <li>Intenta con un ID de cámara diferente (0, 1, 2, etc.)</li>
+            <li>Reinicia el navegador y vuelve a intentar</li>
+          </ul>
+        </div>
+
+        <div class="problem">
+          <h4><i class="fas fa-question-circle"></i> No se reconocen las personas</h4>
+          <ul>
+            <li>Verifica que las fotos estén subidas correctamente</li>
+            <li>Asegúrate de que la iluminación sea adecuada</li>
+            <li>Sube fotos adicionales de la misma persona</li>
+            <li>Verifica que el umbral de similitud sea apropiado</li>
+          </ul>
+        </div>
+
+        <div class="problem">
+          <h4><i class="fas fa-question-circle"></i> No llegan las alertas por email</h4>
+          <ul>
+            <li>Verifica la configuración SMTP en el sistema</li>
+            <li>Revisa la carpeta de spam en tu email</li>
+            <li>Confirma que el email de la empresa esté configurado</li>
+            <li>Contacta al administrador del sistema</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card support">
+      <div class="card-header">
+        <h3><i class="fas fa-headset"></i> Soporte Técnico</h3>
+      </div>
+      <div class="support-content">
+        <p>Si necesitas ayuda adicional, no dudes en contactarnos:</p>
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>soporte@secureface.com</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <span>+57 300 123 4567</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-clock"></i>
+            <span>Lunes a Viernes: 8:00 AM - 6:00 PM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

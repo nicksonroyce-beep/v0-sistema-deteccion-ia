@@ -1,0 +1,29 @@
+# Core Flask
+Flask==2.3.2
+Flask-Session==0.5.0
+Flask-Mail==0.9.1
+
+# Database
+SQLAlchemy==2.0.31
+pymysql==1.1.1
+
+# IA y visión
+deepface==0.0.93
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+Pillow==10.4.0
+
+# TensorFlow stack (compatible con DeepFace)
+tensorflow-cpu==2.15.0
+protobuf==4.25.3
+
+# Utilidades
+python-dotenv==1.0.1
+requests==2.31.0
+email-validator==2.0.0
+
+# Seguridad y autenticación
+werkzeug==2.3.6
+bcrypt==4.0.1
+
+gunicorn==21.2.0

@@ -1,0 +1,234 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="dashboard-header">
+  <h2><i class="fas fa-tachometer-alt"></i> Dashboard de Seguridad - {{ empresa }}</h2>
+  <div class="status-indicators">
+    <div class="status-item">
+      <i class="fas fa-video text-success"></i>
+      <span>Sistema Activo</span>
+    </div>
+    <div class="status-item">
+      <i class="fas fa-shield-alt text-primary"></i>
+      <span>IA Funcionando</span>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard">
+   Sección de múltiples cámaras mejorada 
+  <div class="card cameras-section">
+    <div class="card-header">
+      <h3><i class="fas fa-video"></i> Centro de Monitoreo</h3>
+      <div class="camera-controls">
+        <button id="refreshCameras" class="btn btn-secondary">
+          <i class="fas fa-sync-alt"></i> Actualizar
+        </button>
+      </div>
+    </div>
+    
+    <div class="cameras-grid" id="camerasGrid">
+       Las cámaras se cargarán dinámicamente 
+    </div>
+  </div>
+
+   Estadísticas mejoradas 
+  <div class="card stats-section">
+    <div class="card-header">
+      <h3><i class="fas fa-chart-pie"></i> Estadísticas en Tiempo Real</h3>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon">
+          <i class="fas fa-user-check text-success"></i>
+        </div>
+        <div class="stat-info">
+          <h4 id="conocidosCount">0</h4>
+          <p>Personas Conocidas</p>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <i class="fas fa-user-times text-danger"></i>
+        </div>
+        <div class="stat-info">
+          <h4 id="desconocidosCount">0</h4>
+          <p>Personas Desconocidas</p>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <i class="fas fa-eye text-info"></i>
+        </div>
+        <div class="stat-info">
+          <h4 id="totalDetecciones">0</h4>
+          <p>Total Detecciones Hoy</p>
+        </div>
+      </div>
+    </div>
+    <canvas id="chartEvents"></canvas>
+  </div>
+
+   Alertas recientes 
+  <div class="card alerts-section">
+    <div class="card-header">
+      <h3><i class="fas fa-exclamation-triangle"></i> Alertas Recientes</h3>
+    </div>
+    <div id="recentAlerts" class="alerts-list">
+       Las alertas se cargarán dinámicamente 
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let chart = null;
+
+  function loadCameras() {
+    fetch("/api/cameras")
+      .then(r => r.json())
+      .then(cameras => {
+        const grid = document.getElementById("camerasGrid");
+        grid.innerHTML = "";
+        
+        cameras.forEach(camera => {
+          const cameraDiv = document.createElement("div");
+          cameraDiv.className = "camera-container";
+          cameraDiv.innerHTML = `
+            <div class="camera-header">
+              <h4><i class="fas fa-video"></i> ${camera.name}</h4>
+              <span class="status ${camera.status}">${camera.status === 'active' ? 'Activa' : 'Inactiva'}</span>
+            </div>
+            <div class="stream-container">
+              <div class="cam-loading">Conectando cámara...</div>
+              <img class="cam-stream" src="/placeholder.svg" alt="Stream ${camera.name}" style="display:none;">
+              <div class="cam-error" style="display:none;">⚠️ No se pudo conectar</div>
+            </div>
+            <div class="camera-controls">
+              <button onclick="startCamera(${camera.id}, this)" class="btn btn-primary">
+                <i class="fas fa-play"></i> Iniciar
+              </button>
+              <button onclick="stopCamera(${camera.id}, this)" class="btn btn-secondary">
+                <i class="fas fa-stop"></i> Detener
+              </button>
+            </div>
+          `;
+          grid.appendChild(cameraDiv);
+        });
+      })
+      .catch(err => console.error("Error cargando cámaras:", err));
+  }
+
+  window.startCamera = function(camId, button) {
+    const container = button.closest('.camera-container');
+    const loading = container.querySelector('.cam-loading');
+    const stream = container.querySelector('.cam-stream');
+    const error = container.querySelector('.cam-error');
+    
+    loading.style.display = 'block';
+    stream.style.display = 'none';
+    error.style.display = 'none';
+    
+    stream.src = `/stream/${camId}`;
+    
+    stream.onload = () => {
+      loading.style.display = 'none';
+      stream.style.display = 'block';
+      button.innerHTML = '<i class="fas fa-pause"></i> Pausar';
+    };
+    
+    stream.onerror = () => {
+      loading.style.display = 'none';
+      error.style.display = 'block';
+    };
+  };
+
+  window.stopCamera = function(camId, button) {
+    const container = button.closest('.camera-container');
+    const stream = container.querySelector('.cam-stream');
+    stream.src = '';
+    stream.style.display = 'none';
+    container.querySelector('.cam-loading').style.display = 'none';
+    container.querySelector('.cam-error').style.display = 'none';
+  };
+
+  function loadStats() {
+    fetch("/api/events")
+      .then(r => r.json())
+      .then(data => {
+        const conocidos = data.filter(e => !e.es_desconocido).length;
+        const desconocidos = data.filter(e => e.es_desconocido).length;
+        const total = data.length;
+        
+        document.getElementById('conocidosCount').textContent = conocidos;
+        document.getElementById('desconocidosCount').textContent = desconocidos;
+        document.getElementById('totalDetecciones').textContent = total;
+        
+        // Actualizar gráfico
+        if (chart) {
+          chart.destroy();
+        }
+        
+        chart = new Chart(document.getElementById("chartEvents").getContext("2d"), {
+          type: 'doughnut',
+          data: {
+            labels: ['Personas Conocidas', 'Personas Desconocidas'],
+            datasets: [{
+              data: [conocidos, desconocidos],
+              backgroundColor: ['#28a745','#dc3545'],
+              borderWidth: 2,
+              borderColor: '#fff'
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }
+        });
+        
+        loadRecentAlerts(data);
+      })
+      .catch(err => console.error("Error cargando estadísticas:", err));
+  }
+
+  function loadRecentAlerts(events) {
+    const alertsContainer = document.getElementById('recentAlerts');
+    const recentEvents = events
+      .filter(e => e.es_desconocido)
+      .slice(0, 5)
+      .reverse();
+    
+    if (recentEvents.length === 0) {
+      alertsContainer.innerHTML = '<p class="no-alerts">No hay alertas recientes</p>';
+      return;
+    }
+    
+    alertsContainer.innerHTML = recentEvents.map(event => `
+      <div class="alert-item">
+        <div class="alert-icon">
+          <i class="fas fa-exclamation-triangle text-warning"></i>
+        </div>
+        <div class="alert-info">
+          <strong>Persona Desconocida Detectada</strong>
+          <p>Cámara: ${event.camera} - ${new Date(event.timestamp).toLocaleString()}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Inicializar dashboard
+  loadCameras();
+  loadStats();
+  
+  // Actualizar estadísticas cada 30 segundos
+  setInterval(loadStats, 30000);
+  
+  // Event listeners
+  document.getElementById('refreshCameras').addEventListener('click', loadCameras);
+});
+</script>
+{% endblock %}
